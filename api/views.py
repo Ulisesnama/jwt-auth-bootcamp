@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework import status
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,7 +12,7 @@ from .utils import generate_jwt_token
 class UserViews(APIView):
     serializer_class = UserSerializer
 
-    def get(self, request):
+    def get(self, request: Request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(
@@ -19,7 +20,7 @@ class UserViews(APIView):
             status=status.HTTP_200_OK,
         )
 
-    def post(self, request):
+    def post(self, request: Request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -36,7 +37,7 @@ class UserViews(APIView):
 class UserDetailViews(APIView):
     serializer_class = UserSerializer
 
-    def get(self, request, username):
+    def get(self, request: Request, username: str):
         user = User.objects.get_by_natural_key(username)
         serializer = UserSerializer(user)
         return Response(
@@ -44,7 +45,7 @@ class UserDetailViews(APIView):
             status=status.HTTP_200_OK,
         )
 
-    def patch(self, request, username):
+    def patch(self, request: Request, username: str):
         user = User.objects.get_by_natural_key(username)
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
@@ -58,7 +59,7 @@ class UserDetailViews(APIView):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    def delete(self, request, username):
+    def delete(self, request: Request, username: str):
         user = User.objects.get_by_natural_key(username)
         user.delete()
         return Response(
@@ -70,7 +71,7 @@ class UserDetailViews(APIView):
 class LoginView(APIView):
     serializer_class = LoginSerializer
 
-    def post(self, request):
+    def post(self, request: Request):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             username = serializer.validated_data["username"]
