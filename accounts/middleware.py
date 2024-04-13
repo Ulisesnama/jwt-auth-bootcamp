@@ -6,7 +6,7 @@ from rest_framework.request import Request
 
 
 def jwt_auth_middleware(get_response):
-    excluded_endpoints = ["/api/login/"]
+    excluded_endpoints = ["/login/", "/token/refresh/"]
 
     def middleware(request: Request):
         if request.path in excluded_endpoints:
